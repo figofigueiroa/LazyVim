@@ -1,4 +1,4 @@
 return {
-  "dchinmay2/alabaster.nvim",
+  "vague-theme/vague.nvim",
   lazy = true,
 }
