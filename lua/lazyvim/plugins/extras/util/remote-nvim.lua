@@ -1,5 +1,7 @@
 return {
   "amitds1997/remote-nvim.nvim",
+  lazy = true,
+  cmd = { "RemoteStart", "RemoteStop", "RemoteInfo", "RemoteCleanup", "RemoteConfigDel", "RemoteLog" },
   version = "*", -- Pin to GitHub releases
   dependencies = {
     "nvim-lua/plenary.nvim", -- For standard functions
