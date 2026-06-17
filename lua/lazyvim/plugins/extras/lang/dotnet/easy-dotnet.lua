@@ -8,6 +8,8 @@ return {
 
   { -- lazy.nvim
     "GustavEikaas/easy-dotnet.nvim",
+    ft = { "cs", "vb", "fsharp" },
+    root = { "*.sln", "*.csproj", "*.fsproj", "omnisharp.json", "function.json", "paket.dependencies", "paket.lock" },
     dependencies = { "nvim-lua/plenary.nvim", "folke/snacks.nvim" },
     config = function()
       require("easy-dotnet").setup()
