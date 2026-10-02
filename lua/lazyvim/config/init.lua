@@ -311,7 +311,10 @@ function M.init()
     return
   end
   M.did_init = true
-  local plugin = require("lazy.core.config").spec.plugins.LazyVim
+  -- spec is unavailable when this runs before lazy.nvim's setup
+  -- (e.g. when lazier.nvim loads non-lazy plugins before the first frame)
+  local spec = require("lazy.core.config").spec
+  local plugin = spec and spec.plugins and spec.plugins.LazyVim
   if plugin then
     vim.opt.rtp:append(plugin.dir)
   end

@@ -16,6 +16,7 @@ local LazyUtil = require("lazy.core.util")
 ---@field mini lazyvim.util.mini
 ---@field pick lazyvim.util.pick
 ---@field cmp lazyvim.util.cmp
+---@field lazier lazyvim.util.lazier
 ---@field deprecated lazyvim.util.deprecated
 local M = {}
 M.deprecated = require("lazyvim.util.deprecated")

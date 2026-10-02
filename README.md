@@ -65,6 +65,13 @@ to tweak your config as needed, along with the convenience of a pre-configured s
 
 You can find a starter template for **LazyVim** [here](https://github.com/LazyVim/starter)
 
+This fork also ships a **lazier.nvim starter** in [`starter/`](./starter), which
+boots LazyVim through [lazier.nvim](https://github.com/figofigueiroa/lazier.nvim)
+(branch [`lazyvim-v2`](https://github.com/figofigueiroa/lazier.nvim/tree/lazyvim-v2))
+to render the first frame before `lazy.nvim` starts (~2x faster to first frame)
+and to compile your spec + config into a single bytecode bundle.
+See `:h lazyvim-lazier` for details and caveats.
+
 <details><summary>Try it with Docker</summary>
 
 ```sh
