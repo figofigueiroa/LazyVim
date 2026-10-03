@@ -1,12 +1,13 @@
+local is_windows = vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
+local vault = vim.fs.normalize(is_windows and "~/vault" or "~/Documents/notes/vault")
+
 return {
   "obsidian-nvim/obsidian.nvim",
   cmd = "Obsidian",
-  ft = "markdown",
   lazy = true,
   event = {
-    -- só dispara quando editar um .md dentro de um vault
-    "BufReadPre *.md",
-    "BufNewFile *.md",
+    "BufReadPre " .. vault .. "/**.md",
+    "BufNewFile " .. vault .. "/**.md",
   },
   keys = {
     -- grupo principal
@@ -42,7 +43,7 @@ return {
     workspaces = {
       {
         name = "personal",
-        path = "~/Documents/notes",
+        path = vault,
       },
     },
   },
