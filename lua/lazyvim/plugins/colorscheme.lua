@@ -1,4 +1,4 @@
 return {
   "vague-theme/vague.nvim",
-  lazy = true,
+  lazy = false,
 }
