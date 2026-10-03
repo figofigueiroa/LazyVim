@@ -50,6 +50,7 @@ vim.g.deprecation_warnings = false
 vim.g.trouble_lualine = true
 
 local opt = vim.opt
+local o = vim.o
 
 opt.autowrite = true -- Enable auto write
 -- only set clipboard if not in ssh, to make sure the OSC 52
@@ -113,6 +114,8 @@ opt.virtualedit = "block" -- Allow cursor to move where there is no text in visu
 opt.wildmode = "longest:full,full" -- Command-line completion mode
 opt.winminwidth = 5 -- Minimum window width
 opt.wrap = false -- Disable line wrap
+
+o.winborder = "single"
 
 -- Fix markdown indentation settings
 vim.g.markdown_recommended_style = 0
