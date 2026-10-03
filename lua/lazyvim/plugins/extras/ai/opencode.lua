@@ -131,7 +131,7 @@ return {
   -- that re-require this module, recomputing the gate from the current
   -- session's cwd/argv.
   event = "LazyFile",
-  enabled = function()
+  cond = function()
     return not is_windows and not vault_session
   end,
   keys = keys,
