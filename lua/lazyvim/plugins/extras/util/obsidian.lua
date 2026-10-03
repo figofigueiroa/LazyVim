@@ -1,5 +1,6 @@
 return {
   "obsidian-nvim/obsidian.nvim",
+  cmd = "Obsidian",
   ft = "markdown",
   lazy = true,
   event = {
@@ -7,10 +8,6 @@ return {
     "BufReadPre *.md",
     "BufNewFile *.md",
   },
-  cond = function()
-    local vault = vim.fn.getcwd() .. "/.obsidian"
-    return vim.fn.isdirectory(vault) == 1
-  end,
   keys = {
     -- grupo principal
     { "<leader>o", group = "obsidian" },
