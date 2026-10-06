@@ -123,55 +123,65 @@ local function disable_in_vault(buf)
 end
 
 return {
-  "sudo-tee/opencode.nvim",
-  -- `enabled` must be a function: lazier serializes the resolved specs into
-  -- a startup cache, and a session-computed boolean would bake the verdict
-  -- of whichever session last rebuilt it (a coding session leaks the agent
-  -- into later vault sessions and vice versa). Functions become fragments
-  -- that re-require this module, recomputing the gate from the current
-  -- session's cwd/argv.
-  event = "LazyFile",
-  cond = function()
-    return not is_windows and not vault_session
-  end,
-  keys = keys,
-  dependencies = {
-    -- render-markdown powers the tool output windows (its own spec lives in
-    -- lua/plugins/render-markdown.lua)
+  {
+    "sudo-tee/opencode.nvim",
+    -- `enabled` must be a function: lazier serializes the resolved specs into
+    -- a startup cache, and a session-computed boolean would bake the verdict
+    -- of whichever session last rebuilt it (a coding session leaks the agent
+    -- into later vault sessions and vice versa). Functions become fragments
+    -- that re-require this module, recomputing the gate from the current
+    -- session's cwd/argv.
+    event = "LazyFile",
+    cond = function()
+      return not is_windows and not vault_session
+    end,
+    keys = keys,
+    dependencies = {
+      -- render-markdown powers the tool output windows (its own spec lives in
+      -- lua/plugins/render-markdown.lua)
+      "MeanderingProgrammer/render-markdown.nvim",
+      -- for file mentions and command completion
+      "saghen/blink.cmp",
+      -- for the file-mention picker
+      "folke/snacks.nvim",
+      -- registers the vault shadows, so it must load before this plugin
+      "folke/which-key.nvim",
+    },
+    opts = {
+      preferred_picker = "snacks",
+      preferred_completion = "blink",
+      default_mode = "plan",
+      -- Editor keymaps live in the `keys` table above; `false` also drops the
+      -- plugin's default `<leader>o*` editor maps (window keymaps stay).
+      default_global_keymaps = false,
+    },
+
+    config = function(_, opts)
+      require("opencode").setup(opts)
+
+      local group = vim.api.nvim_create_augroup("opencode-vault-off", { clear = true })
+      vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
+        group = group,
+        pattern = vault .. "/**.md",
+        callback = function(event)
+          disable_in_vault(event.buf)
+        end,
+      })
+
+      -- The autocmd can't see the BufReadPre in flight when that very event
+      -- loaded the plugin: cover the current buffer too when it is a note.
+      local name = vim.api.nvim_buf_get_name(0)
+      if in_vault(name) and vim.fn.fnamemodify(name, ":e") == "md" then
+        disable_in_vault(0)
+      end
+    end,
+  },
+  {
     "MeanderingProgrammer/render-markdown.nvim",
-    -- for file mentions and command completion
-    "saghen/blink.cmp",
-    -- for the file-mention picker
-    "folke/snacks.nvim",
-    -- registers the vault shadows, so it must load before this plugin
-    "folke/which-key.nvim",
+    opts = {
+      anti_conceal = { enabled = false },
+      file_types = { "markdown", "opencode_output" },
+    },
+    ft = { "markdown", "opencode_output" },
   },
-  opts = {
-    preferred_picker = "snacks",
-    preferred_completion = "blink",
-    default_mode = "plan",
-    -- Editor keymaps live in the `keys` table above; `false` also drops the
-    -- plugin's default `<leader>o*` editor maps (window keymaps stay).
-    default_global_keymaps = false,
-  },
-
-  config = function(_, opts)
-    require("opencode").setup(opts)
-
-    local group = vim.api.nvim_create_augroup("opencode-vault-off", { clear = true })
-    vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
-      group = group,
-      pattern = vault .. "/**.md",
-      callback = function(event)
-        disable_in_vault(event.buf)
-      end,
-    })
-
-    -- The autocmd can't see the BufReadPre in flight when that very event
-    -- loaded the plugin: cover the current buffer too when it is a note.
-    local name = vim.api.nvim_buf_get_name(0)
-    if in_vault(name) and vim.fn.fnamemodify(name, ":e") == "md" then
-      disable_in_vault(0)
-    end
-  end,
 }
