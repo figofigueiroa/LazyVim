@@ -55,7 +55,10 @@ return {
     end,
     opts = function()
       local plugin = require("lazy.core.config").plugins["conform.nvim"]
-      if plugin.config ~= M.setup then
+      -- lazier.nvim's compiled fast path serializes every spec function into a
+      -- pass-through stub, so this identity check is meaningless when booted
+      -- through lazier
+      if plugin.config ~= M.setup and not LazyVim.lazier.enabled() then
         LazyVim.error({
           "Don't set `plugin.config` for `conform.nvim`.\n",
           "This will break **LazyVim** formatting.\n",
